@@ -53,16 +53,17 @@
   .goaltext{display:flex;justify-content:space-between;font-weight:700;
             font-size:12px;margin-top:7px}
 
-  .bars{padding:32px 20px 0}
-  .chart-title{font-family:'Permanent Marker',cursive;font-size:22px;color:var(--mint);
-               margin-bottom:26px}
+  /* ---- gemeinsame Überschrift ---- */
+  .chart-title{font-family:'Permanent Marker',cursive;font-size:22px;color:var(--mint)}
 
+  /* ================= MOBIL: liegende Balken ================= */
+  .bars{padding:32px 20px 0}
+  .bars .chart-title{margin-bottom:26px}
   .brow{margin-bottom:26px}
-  .bhead{display:flex;align-items:center;gap:10px;margin-bottom:11px;flex-wrap:wrap}
+  .bhead{display:flex;align-items:center;gap:10px;margin-bottom:11px}
   .bname{font-weight:700;font-size:13.5px;letter-spacing:.04em;text-transform:uppercase;
          flex:1 1 auto;min-width:0;line-height:1.2}
   .bval{font-family:'Anton',sans-serif;font-size:23px;color:var(--yellow);flex:none}
-
   .btrack{position:relative;height:34px;margin-right:13px;border-radius:5px;
           background:rgba(255,255,255,.10)}
   .hbar{position:absolute;left:0;top:0;height:100%;width:0;border-radius:2px;
@@ -72,19 +73,49 @@
              background:var(--c-top);transform:skewX(-45deg);transform-origin:bottom left}
   .hbar .side{position:absolute;right:calc(-1 * var(--d));top:0;width:var(--d);height:100%;
               background:var(--c-side);transform:skewY(-45deg);transform-origin:left top}
+  .bars .adminbtns{display:flex;gap:7px;margin-top:11px}
+  .bars .mini{height:42px;flex:1;font-size:15px}
 
-  .adminbtns{display:flex;gap:7px;margin-top:11px}
+  /* ================= DESKTOP: stehende Balken ================= */
+  .chartwrap{display:none;padding:34px 20px 0}
+  .chart{display:flex;align-items:flex-end;justify-content:space-around;gap:4px;
+         height:270px;padding:40px 12px 0;margin-top:22px;
+         border-bottom:5px solid rgba(255,255,255,.22)}
+  .col{flex:1 1 0;display:flex;flex-direction:column;align-items:center;max-width:76px}
+  .barval{font-family:'Anton',sans-serif;font-size:21px;color:var(--yellow);margin-bottom:9px}
+  .bar{position:relative;width:100%;height:4px;
+       transition:height 1s cubic-bezier(.2,.85,.25,1)}
+  .bar .front{position:absolute;inset:0;background:var(--c)}
+  .bar .top{position:absolute;left:0;top:calc(-1 * var(--d));width:100%;height:var(--d);
+            background:var(--c-top);transform:skewX(-45deg);transform-origin:bottom left}
+  .bar .side{position:absolute;right:calc(-1 * var(--d));top:0;width:var(--d);height:100%;
+             background:var(--c-side);transform:skewY(-45deg);transform-origin:left top}
+  .barname{margin-top:14px;font-weight:700;font-size:10.5px;letter-spacing:.05em;
+           text-transform:uppercase;text-align:center;line-height:1.25;opacity:.92;
+           word-break:break-word}
+
+  .list{display:none;padding:34px 20px 0}
+  .row{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.07);
+       border-radius:16px;padding:12px 14px;margin-bottom:10px}
+  .dot{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--black);flex:none}
+  .rname{flex:1;font-weight:700;font-size:15px}
+  .rnum{font-family:'Anton',sans-serif;font-size:24px;color:var(--yellow)}
+  .row .adminbtns{display:flex;gap:6px;margin-left:6px}
+  .row .mini{width:40px;height:40px;font-size:15px}
+
+  /* ---- Umschaltpunkt ---- */
+  @media(min-width:620px){
+    .bars{display:none}
+    .chartwrap{display:block}
+    .list{display:block}
+  }
+
   .mini{border:2.5px solid var(--black);background:var(--cream);color:var(--purple);
-        font-family:'Anton',sans-serif;font-size:15px;height:42px;min-width:52px;flex:1;
-        border-radius:11px;cursor:pointer;touch-action:manipulation}
+        font-family:'Anton',sans-serif;border-radius:11px;cursor:pointer;
+        touch-action:manipulation}
   .mini:active{transform:translateY(2px)}
   .mini.plus{background:var(--mint)} .mini.plus5{background:var(--yellow)}
   .mini.minus{background:var(--pink);color:var(--cream)}
-
-  @media(min-width:560px){
-    .adminbtns{margin-top:0;flex:none}
-    .mini{flex:none;width:52px}
-  }
 
   footer{margin-top:38px;padding:22px 20px 10px;border-top:5px solid var(--yellow);
          font-size:12.5px;line-height:1.55;opacity:.75}
@@ -229,7 +260,11 @@ async function pushState(){
 function render(){
   const app = document.getElementById('app');
   const t = total();
-  const max = Math.max(1, ...state.items.map(i=>i.count||0));
+  // Maßstab der Balken: anteiliges Ziel pro Kategorie, wächst mit, wenn es übertroffen wird
+  const perTarget = Math.max(1, Math.ceil((state.goal||1) / Math.max(1,state.items.length)));
+  const highest = Math.max(0, ...state.items.map(i=>i.count||0));
+  const scaleMax = Math.max(perTarget, highest, 1);
+  const pctOf = n => Math.min(100, Math.round(((n||0)/scaleMax)*100));
   const pct = Math.min(100, state.goal ? (t/state.goal)*100 : 0);
 
   app.className = '';
@@ -246,14 +281,13 @@ function render(){
       <div class="chart-title">Was schon da ist</div>
       ${state.items.map((it,idx)=>{
         const p = pal(idx);
-        const pctBar = Math.round(((it.count||0)/max)*100);
         return `<div class="brow">
           <div class="bhead">
             <span class="bname">${it.name}</span>
             <span class="bval">${it.count||0}</span>
           </div>
           <div class="btrack">
-            <div class="hbar" data-w="${pctBar}"
+            <div class="hbar" data-w="${pctOf(it.count)}"
                  style="--c:${p.c};--c-top:${p.top};--c-side:${p.side};--d:9px">
               <div class="top"></div><div class="side"></div><div class="front"></div>
             </div>
@@ -267,6 +301,39 @@ function render(){
       }).join('')}
     </div>
 
+    <div class="chartwrap">
+      <div class="chart-title">Was schon da ist</div>
+      <div class="chart">
+        ${state.items.map((it,idx)=>{
+          const p = pal(idx);
+          return `<div class="col">
+            <div class="barval">${it.count||0}</div>
+            <div class="bar" data-h="${Math.round(pctOf(it.count)/100*185)}"
+                 style="--c:${p.c};--c-top:${p.top};--c-side:${p.side};--d:11px">
+              <div class="top"></div><div class="side"></div><div class="front"></div>
+            </div>
+            <div class="barname">${it.name}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="list">
+      ${state.items.map((it,idx)=>{
+        const p = pal(idx);
+        return `<div class="row">
+          <span class="dot" style="background:${p.c}"></span>
+          <span class="rname">${it.name}</span>
+          <span class="rnum">${it.count||0}</span>
+          ${isAdmin?`<span class="adminbtns">
+            <button class="mini minus" data-act="dec"  data-id="${it.id}">–</button>
+            <button class="mini plus"  data-act="inc"  data-id="${it.id}">+1</button>
+            <button class="mini plus5" data-act="inc5" data-id="${it.id}">+5</button>
+          </span>`:''}
+        </div>`;
+      }).join('')}
+    </div>
+
     <footer>
       ${liveOK?'<span class="live"><i></i>Live</span><br>':''}
       Alles geht an die Hamburger Kinder- und Jugendhilfe e.&nbsp;V.<br>
@@ -275,6 +342,7 @@ function render(){
 
   requestAnimationFrame(()=>{
     document.querySelectorAll('.hbar').forEach(b=>b.style.width = b.dataset.w+'%');
+    document.querySelectorAll('.chart .bar').forEach(b=>b.style.height = b.dataset.h+'px');
     document.getElementById('goalfill').style.width = pct+'%';
     countUp(document.getElementById('totalNum'), t);
   });
