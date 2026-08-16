@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Spendenstand · Sammelaktion Eppendorf</title>
+<meta name="description" content="Live-Zähler unserer Schulmaterial-Sammlung für Kinder und Jugendliche der Jugendhilfe.">
+<meta name="theme-color" content="#4B259E">
+
+<meta property="og:title" content="Spendenstand · Sammelaktion Eppendorf">
+<meta property="og:description" content="Schau live, wie viel Schulmaterial schon zusammengekommen ist.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --purple:#4B259E; --purple-d:#361A75; --pink:#FA4D95;
+    --yellow:#F0D426; --mint:#8EE8C8; --cream:#F2EDE4; --black:#0E0C14;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    background:var(--purple); color:var(--cream);
+    font-family:'Archivo',system-ui,-apple-system,sans-serif;
+    min-height:100vh; padding-bottom:130px; overflow-x:hidden;
+  }
+  .wrap{max-width:720px;margin:0 auto}
+
+  .topbar{
+    background:var(--pink); color:var(--purple);
+    font-weight:700; font-size:13px; letter-spacing:.16em;
+    text-align:center; padding:13px 16px; text-transform:uppercase;
+  }
+  header{padding:26px 20px 6px}
+  h1{font-family:'Anton',sans-serif;font-size:clamp(38px,11vw,62px);
+     line-height:.94;color:var(--cream)}
+  h1 em{font-style:normal;color:var(--yellow);display:block}
+
+  .total-card{
+    margin:20px 20px 0; background:var(--mint); color:var(--purple);
+    border:4px solid var(--black); border-radius:22px; padding:20px 22px 22px;
+  }
+  .total-label{font-weight:700;font-size:12px;letter-spacing:.18em;
+               text-transform:uppercase;opacity:.7}
+  .total-num{font-family:'Anton',sans-serif;font-size:clamp(56px,20vw,110px);line-height:1}
+  .total-sub{font-weight:600;font-size:15px;margin-top:4px}
+  .goalbar{margin-top:16px;height:22px;border:3px solid var(--black);
+           border-radius:12px;background:#fff;overflow:hidden}
+  .goalfill{height:100%;width:0;background:var(--pink);
+            transition:width .9s cubic-bezier(.2,.8,.2,1)}
+  .goaltext{display:flex;justify-content:space-between;font-weight:700;
+            font-size:12px;margin-top:7px}
+
+  .chartwrap{padding:34px 20px 0}
+  .chart-title{font-family:'Permanent Marker',cursive;font-size:22px;color:var(--mint)}
+  .chart{display:flex;align-items:flex-end;justify-content:space-around;gap:4px;
+         height:270px;padding:40px 12px 0;margin-top:22px;
+         border-bottom:5px solid rgba(255,255,255,.22)}
+  .col{flex:1 1 0;display:flex;flex-direction:column;align-items:center;max-width:76px}
+  .barval{font-family:'Anton',sans-serif;font-size:21px;color:var(--yellow);margin-bottom:9px}
+  .bar{position:relative;width:100%;height:4px;
+       transition:height 1s cubic-bezier(.2,.85,.25,1)}
+  .bar .front{position:absolute;inset:0;background:var(--c)}
+  .bar .top{position:absolute;left:0;top:calc(-1 * var(--d));width:100%;height:var(--d);
+            background:var(--c-top);transform:skewX(-45deg);transform-origin:bottom left}
+  .bar .side{position:absolute;right:calc(-1 * var(--d));top:0;width:var(--d);height:100%;
+             background:var(--c-side);transform:skewY(-45deg);transform-origin:left top}
+  .barname{margin-top:14px;font-weight:700;font-size:10.5px;letter-spacing:.05em;
+           text-transform:uppercase;text-align:center;line-height:1.25;opacity:.92;
+           word-break:break-word}
+
+  .list{padding:34px 20px 0}
+  .row{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.07);
+       border-radius:16px;padding:12px 14px;margin-bottom:10px}
+  .dot{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--black);flex:none}
+  .rname{flex:1;font-weight:700;font-size:15px}
+  .rnum{font-family:'Anton',sans-serif;font-size:24px;color:var(--yellow)}
+  .adminbtns{display:flex;gap:6px;margin-left:6px}
+  .mini{border:2.5px solid var(--black);background:var(--cream);color:var(--purple);
+        font-family:'Anton',sans-serif;font-size:15px;width:40px;height:40px;
+        border-radius:11px;cursor:pointer;touch-action:manipulation}
+  .mini:active{transform:translateY(2px)}
+  .mini.plus{background:var(--mint)} .mini.plus5{background:var(--yellow)}
+  .mini.minus{background:var(--pink);color:var(--cream)}
+
+  footer{margin-top:38px;padding:22px 20px 10px;border-top:5px solid var(--yellow);
+         font-size:12.5px;line-height:1.55;opacity:.75}
+  .live{display:inline-flex;align-items:center;gap:6px;font-weight:700;
+        font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mint)}
+  .live i{width:8px;height:8px;border-radius:50%;background:var(--mint);
+          display:inline-block;animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  .fab{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));
+       width:60px;height:60px;border-radius:50%;border:4px solid var(--black);
+       background:var(--yellow);color:var(--purple);font-size:24px;cursor:pointer;
+       z-index:40;display:grid;place-items:center;box-shadow:0 6px 0 rgba(0,0,0,.35)}
+  .fab:active{transform:translateY(3px);box-shadow:0 3px 0 rgba(0,0,0,.35)}
+  .fab.on{background:var(--mint)}
+
+  .sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--cream);
+         color:var(--purple);border-top:5px solid var(--black);
+         border-radius:22px 22px 0 0;
+         padding:20px 18px calc(22px + env(safe-area-inset-bottom));
+         transform:translateY(110%);transition:transform .32s cubic-bezier(.2,.8,.2,1);
+         max-height:86vh;overflow:auto}
+  .sheet.open{transform:translateY(0)}
+  .sheet h2{font-family:'Anton',sans-serif;font-size:26px}
+  .sheet p.hint{font-size:12.5px;opacity:.7;margin-bottom:14px}
+  .field{display:flex;gap:8px;margin-bottom:10px}
+  input{flex:1;min-width:0;border:3px solid var(--black);border-radius:12px;
+        padding:12px 13px;font-size:16px;font-family:inherit;font-weight:600;
+        background:#fff;color:var(--purple)}
+  .btn{border:3px solid var(--black);border-radius:12px;padding:12px 16px;
+       font-family:'Anton',sans-serif;font-size:16px;background:var(--purple);
+       color:var(--cream);cursor:pointer;white-space:nowrap}
+  .btn.alt{background:var(--mint);color:var(--purple)}
+  .btn.warn{background:var(--pink);color:var(--cream)}
+  .btn:active{transform:translateY(2px)}
+  .btn.wide{width:100%;margin-top:6px}
+  .sec{margin-top:18px;padding-top:16px;border-top:2.5px dashed rgba(0,0,0,.25)}
+  .sec h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+          opacity:.65;margin-bottom:9px}
+  .status{margin-top:12px;font-size:12.5px;font-weight:600;min-height:18px;color:#7A2E12}
+  .toast{position:fixed;left:50%;transform:translateX(-50%) translateY(20px);
+         bottom:100px;z-index:60;background:var(--black);color:var(--cream);
+         padding:11px 18px;border-radius:30px;font-size:13.5px;font-weight:600;
+         opacity:0;transition:.28s;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .loading{padding:60px 20px;text-align:center;font-weight:600;opacity:.8}
+  .err{margin:20px;padding:16px;border:3px solid var(--pink);border-radius:16px;
+       background:rgba(250,77,149,.12);font-size:14px;line-height:1.6}
+  code{background:rgba(0,0,0,.25);padding:2px 6px;border-radius:6px;font-size:12.5px}
+</style>
+</head>
+<body>
+
+<div class="topbar">Sammelaktion Nº 1 · Eppendorf · 17.–19. August</div>
+
+<div class="wrap">
+  <header><h1>Spendenstand<em>live.</em></h1></header>
+  <div id="app" class="loading">Lade aktuellen Stand …</div>
+</div>
+
+<button class="fab" id="fab" title="Verwaltung">🔒</button>
+<div class="sheet" id="sheet"><div id="sheetBody"></div></div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+/* ============================================================
+   NUR DIESE EINE ZEILE MUSST DU NOCH AUSFÜLLEN
+   ------------------------------------------------------------
+   Supabase → linke Seitenleiste → "API Keys"
+   Dort den Schlüssel kopieren, der mit anon / public / publishable
+   gekennzeichnet ist. (NICHT den service_role-Schlüssel!)
+   ============================================================ */
+const SUPABASE_ANON_KEY = 'sb_publishable_spCUF-JzFyP5x_cE9y8c2w_aeVuW74D';
+
+// Deine Projekt-Adresse - steht schon richtig drin.
+const SUPABASE_URL = 'https://wmdubjrtxqbqpglfklrf.supabase.co';
+/* ============================================================ */
+
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const ROW_ID = 'main';
+const PALETTE = [
+  { c:'#FA4D95', top:'#FF7DB2', side:'#C22C6B' },
+  { c:'#F0D426', top:'#FFE96B', side:'#BFA80E' },
+  { c:'#8EE8C8', top:'#B7F5DF', side:'#4FBE9B' },
+  { c:'#F2EDE4', top:'#FFFFFF', side:'#BCB3A4' },
+  { c:'#7B5BD6', top:'#A78BEE', side:'#523A99' },
+  { c:'#FF9A3C', top:'#FFBC7A', side:'#C86A18' }
+];
+const DEFAULT = {
+  goal: 250,
+  items: [
+    { id:'hefte',   name:'Hefte',         count:0 },
+    { id:'stifte',  name:'Stifte',        count:0 },
+    { id:'maepp',   name:'Federmäppchen', count:0 },
+    { id:'bloecke', name:'Blöcke',        count:0 },
+    { id:'radier',  name:'Radiergummis',  count:0 }
+  ]
+};
+
+let sb = null, state = null, isAdmin = false, updatedAt = null, liveOK = false;
+
+function configured(){
+  return SUPABASE_URL.startsWith('http') && SUPABASE_ANON_KEY.length > 20;
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 1900);
+}
+function total(){ return state.items.reduce((s,i)=>s+(i.count||0),0); }
+function pal(i){ return PALETTE[i % PALETTE.length]; }
+function fmt(ts){
+  if(!ts) return '–';
+  return new Date(ts).toLocaleString('de-DE',
+    {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+
+/* ---------- Daten ---------- */
+async function fetchState(){
+  const { data, error } = await sb.from('counters')
+    .select('data, updated_at').eq('id', ROW_ID).maybeSingle();
+  if (error) throw error;
+  if (!data){
+    await sb.from('counters').insert({ id: ROW_ID, data: DEFAULT });
+    return { data: structuredClone(DEFAULT), updated_at: new Date().toISOString() };
+  }
+  return data;
+}
+
+async function pushState(){
+  const { error } = await sb.from('counters')
+    .update({ data: state, updated_at: new Date().toISOString() })
+    .eq('id', ROW_ID);
+  if (error){ toast('Speichern fehlgeschlagen'); return false; }
+  updatedAt = new Date().toISOString();
+  return true;
+}
+
+/* ---------- Ansicht ---------- */
+function render(){
+  const app = document.getElementById('app');
+  const t = total();
+  const max = Math.max(1, ...state.items.map(i=>i.count||0));
+  const pct = Math.min(100, state.goal ? (t/state.goal)*100 : 0);
+
+  app.className = '';
+  app.innerHTML = `
+    <div class="total-card">
+      <div class="total-label">Bisher gesammelt</div>
+      <div class="total-num" id="totalNum">0</div>
+      <div class="total-sub">Teile für Kinder und Jugendliche der Jugendhilfe</div>
+      <div class="goalbar"><div class="goalfill" id="goalfill"></div></div>
+      <div class="goaltext"><span>Ziel: ${state.goal} Teile</span><span>${Math.round(pct)} %</span></div>
+    </div>
+
+    <div class="chartwrap">
+      <div class="chart-title">Was schon da ist</div>
+      <div class="chart" id="chart">
+        ${state.items.map((it,idx)=>{
+          const p = pal(idx);
+          return `<div class="col">
+            <div class="barval">${it.count||0}</div>
+            <div class="bar" data-h="${Math.round(((it.count||0)/max)*185)}"
+                 style="--c:${p.c};--c-top:${p.top};--c-side:${p.side};--d:11px">
+              <div class="top"></div><div class="side"></div><div class="front"></div>
+            </div>
+            <div class="barname">${it.name}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div class="list">
+      ${state.items.map((it,idx)=>{
+        const p = pal(idx);
+        return `<div class="row">
+          <span class="dot" style="background:${p.c}"></span>
+          <span class="rname">${it.name}</span>
+          <span class="rnum">${it.count||0}</span>
+          ${isAdmin?`<span class="adminbtns">
+            <button class="mini minus" data-act="dec"  data-id="${it.id}">–</button>
+            <button class="mini plus"  data-act="inc"  data-id="${it.id}">+1</button>
+            <button class="mini plus5" data-act="inc5" data-id="${it.id}">+5</button>
+          </span>`:''}
+        </div>`;
+      }).join('')}
+    </div>
+
+    <footer>
+      ${liveOK?'<span class="live"><i></i>Live</span><br>':''}
+      Alles geht an die Hamburger Kinder- und Jugendhilfe e.&nbsp;V.<br>
+      Zuletzt aktualisiert: ${fmt(updatedAt)}
+    </footer>`;
+
+  requestAnimationFrame(()=>{
+    document.querySelectorAll('#chart .bar').forEach(b=>b.style.height = b.dataset.h+'px');
+    document.getElementById('goalfill').style.width = pct+'%';
+    countUp(document.getElementById('totalNum'), t);
+  });
+
+  if (isAdmin){
+    app.querySelectorAll('.mini').forEach(btn=>{
+      btn.onclick = async ()=>{
+        const it = state.items.find(x=>x.id===btn.dataset.id);
+        if (!it) return;
+        const a = btn.dataset.act;
+        it.count = Math.max(0,(it.count||0)+(a==='inc'?1:a==='inc5'?5:-1));
+        render(); await pushState();
+      };
+    });
+  }
+}
+
+function countUp(el, to){
+  const from = parseInt(el.textContent.replace(/\D/g,''))||0;
+  const dur = 700, t0 = performance.now();
+  (function step(now){
+    const k = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-k,3);
+    el.textContent = Math.round(from+(to-from)*e);
+    if (k<1) requestAnimationFrame(step);
+  })(performance.now());
+}
+
+/* ---------- Verwaltung ---------- */
+function sheetHTML(){
+  if (!isAdmin){
+    return `<h2>Verwaltung</h2>
+      <p class="hint">Nur für die Organisation. Melde dich mit deinen Zugangsdaten an.</p>
+      <div class="field"><input id="mail" type="email" placeholder="E-Mail" autocomplete="username"></div>
+      <div class="field">
+        <input id="pw" type="password" placeholder="Passwort" autocomplete="current-password">
+        <button class="btn" id="loginBtn">Los</button>
+      </div>
+      <div class="status" id="loginStatus"></div>`;
+  }
+  return `<h2>Verwaltung</h2>
+    <p class="hint">Änderungen sind sofort für alle sichtbar.</p>
+
+    <div class="sec"><h3>Ziel</h3>
+      <div class="field">
+        <input id="goalInput" type="number" min="1" value="${state.goal}">
+        <button class="btn alt" id="goalBtn">Setzen</button>
+      </div>
+    </div>
+
+    <div class="sec"><h3>Genauen Wert eintragen</h3>
+      ${state.items.map(i=>`<div class="field">
+        <input type="number" min="0" value="${i.count||0}" data-set="${i.id}" style="max-width:120px">
+        <span style="flex:1;align-self:center;font-weight:700;font-size:14px">${i.name}</span>
+      </div>`).join('')}
+      <button class="btn alt wide" id="setBtn">Werte speichern</button>
+    </div>
+
+    <div class="sec"><h3>Kategorien</h3>
+      <div class="field">
+        <input id="newName" placeholder="z. B. Lineale" autocomplete="off">
+        <button class="btn alt" id="addBtn">Hinzufügen</button>
+      </div>
+      ${state.items.length>1?`<div class="field" style="flex-wrap:wrap">
+        ${state.items.map(i=>`<button class="btn warn" data-del="${i.id}"
+          style="font-size:13px;padding:9px 12px">✕ ${i.name}</button>`).join('')}
+      </div>`:''}
+    </div>
+
+    <div class="sec"><h3>Sonstiges</h3>
+      <button class="btn warn wide" id="resetBtn">Alle Zähler auf 0</button>
+      <button class="btn wide" id="logoutBtn">Abmelden</button>
+    </div>
+    <div class="status" id="admStatus"></div>`;
+}
+
+function bindSheet(){
+  const body = document.getElementById('sheetBody');
+  body.innerHTML = sheetHTML();
+
+  if (!isAdmin){
+    const go = async ()=>{
+      const email = document.getElementById('mail').value.trim();
+      const password = document.getElementById('pw').value;
+      const st = document.getElementById('loginStatus');
+      st.textContent = 'Prüfe …';
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error){ st.textContent = 'Anmeldung fehlgeschlagen.'; return; }
+      isAdmin = true; st.textContent = '';
+      bindSheet(); render(); setFab(true); toast('Angemeldet');
+    };
+    document.getElementById('loginBtn').onclick = go;
+    document.getElementById('pw').onkeydown = e => { if (e.key==='Enter') go(); };
+    return;
+  }
+
+  document.getElementById('goalBtn').onclick = async ()=>{
+    const v = parseInt(document.getElementById('goalInput').value);
+    if (v>0){ state.goal = v; render(); await pushState(); toast('Ziel aktualisiert'); }
+  };
+  document.getElementById('setBtn').onclick = async ()=>{
+    body.querySelectorAll('[data-set]').forEach(inp=>{
+      const it = state.items.find(x=>x.id===inp.dataset.set);
+      if (it) it.count = Math.max(0, parseInt(inp.value)||0);
+    });
+    render(); await pushState(); toast('Werte gespeichert');
+  };
+  document.getElementById('addBtn').onclick = async ()=>{
+    const n = document.getElementById('newName').value.trim();
+    if (!n) return;
+    state.items.push({ id:'i'+Date.now(), name:n, count:0 });
+    bindSheet(); render(); await pushState(); toast('Kategorie ergänzt');
+  };
+  body.querySelectorAll('[data-del]').forEach(b=>{
+    b.onclick = async ()=>{
+      if (state.items.length<=1) return;
+      state.items = state.items.filter(x=>x.id!==b.dataset.del);
+      bindSheet(); render(); await pushState();
+    };
+  });
+  document.getElementById('resetBtn').onclick = async ()=>{
+    if (!confirm('Wirklich alle Zähler auf 0 setzen?')) return;
+    state.items.forEach(i=>i.count=0);
+    bindSheet(); render(); await pushState(); toast('Zurückgesetzt');
+  };
+  document.getElementById('logoutBtn').onclick = async ()=>{
+    await sb.auth.signOut();
+    isAdmin = false; bindSheet(); render(); setFab(false);
+    document.getElementById('sheet').classList.remove('open');
+  };
+}
+
+function setFab(on){
+  const f = document.getElementById('fab');
+  f.classList.toggle('on', on);
+  f.textContent = on ? '⚙️' : '🔒';
+}
+
+/* ---------- Start ---------- */
+(async function init(){
+  if (!configured()){
+    document.getElementById('app').innerHTML =
+      `<div class="err"><b>Noch nicht eingerichtet.</b><br>
+       Trage oben in der Datei <code>index.html</code> deinen
+       <code>SUPABASE_ANON_KEY</code> ein.<br>
+       Zu finden in Supabase in der linken Seitenleiste unter
+       <i>API Keys</i> &mdash; der Schlüssel mit der Kennzeichnung
+       <i>anon</i> / <i>public</i> / <i>publishable</i>.</div>`;
+    return;
+  }
+
+  sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const { data:{ session } } = await sb.auth.getSession();
+  isAdmin = !!session;
+
+  try{
+    const row = await fetchState();
+    state = row.data; updatedAt = row.updated_at;
+  }catch(e){
+    document.getElementById('app').innerHTML =
+      `<div class="err"><b>Keine Verbindung zur Datenbank.</b><br>
+       Prüfe die Zugangsdaten und ob die Tabelle <code>counters</code> angelegt ist.</div>`;
+    return;
+  }
+
+  render(); bindSheet(); setFab(isAdmin);
+
+  const fab = document.getElementById('fab');
+  const sheet = document.getElementById('sheet');
+  fab.onclick = ()=> sheet.classList.toggle('open');
+  document.addEventListener('click', e=>{
+    if (sheet.classList.contains('open') && !sheet.contains(e.target) && e.target!==fab)
+      sheet.classList.remove('open');
+  });
+
+  // Live-Updates
+  sb.channel('counters-live')
+    .on('postgres_changes',
+        { event:'UPDATE', schema:'public', table:'counters', filter:`id=eq.${ROW_ID}` },
+        payload => {
+          if (isAdmin) return;
+          state = payload.new.data;
+          updatedAt = payload.new.updated_at;
+          render();
+        })
+    .subscribe(status => {
+      liveOK = (status === 'SUBSCRIBED');
+      if (liveOK) render();
+    });
+
+  // Sicherheitsnetz, falls Live-Verbindung abbricht
+  setInterval(async ()=>{
+    if (isAdmin) return;
+    try{
+      const row = await fetchState();
+      if (row.updated_at !== updatedAt){
+        state = row.data; updatedAt = row.updated_at; render();
+      }
+    }catch(e){}
+  }, 20000);
+})();
+</script>
+</body>
+</html>
