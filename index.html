@@ -117,6 +117,57 @@
   .mini.plus{background:var(--mint)} .mini.plus5{background:var(--yellow)}
   .mini.minus{background:var(--pink);color:var(--cream)}
 
+  /* ================= Inhaltsabschnitte ================= */
+  .meta{padding:26px 20px 4px;font-size:12.5px;line-height:1.55;opacity:.65}
+  .live{display:inline-flex;align-items:center;gap:6px;font-weight:700;
+        font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mint)}
+  .live i{width:8px;height:8px;border-radius:50%;background:var(--mint);
+          display:inline-block;animation:pulse 1.8s infinite}
+
+  section{padding:52px 20px 56px}
+  section.alt{background:var(--pink);color:var(--purple)}
+  section.alt2{background:var(--cream);color:var(--purple)}
+  section.alt3{background:var(--yellow);color:var(--purple)}
+
+  .kicker{font-weight:700;font-size:11.5px;letter-spacing:.2em;
+          text-transform:uppercase;opacity:.75;margin-bottom:12px}
+  section h2{font-family:'Anton',sans-serif;font-size:clamp(30px,8.5vw,46px);
+             line-height:1.02;margin-bottom:20px}
+  section h2 em{font-style:normal;color:var(--yellow);display:block}
+  section.alt h2 em{color:var(--cream)}
+  section.alt2 h2 em{color:var(--pink)}
+  section.alt3 h2 em{color:var(--pink)}
+  section p{font-size:16px;line-height:1.65;margin-bottom:15px;font-weight:500}
+  section p strong{font-weight:700}
+
+  .steps{margin-top:26px;display:flex;flex-direction:column;gap:20px}
+  .step{display:flex;gap:15px;align-items:flex-start}
+  .step .num{flex:none;width:46px;height:46px;border-radius:50%;
+             border:3px solid var(--black);display:grid;place-items:center;
+             font-family:'Anton',sans-serif;font-size:22px;color:var(--purple)}
+  .step p{margin:0;font-size:15.5px;padding-top:9px}
+
+  .partners{margin-top:24px;display:flex;flex-wrap:wrap;gap:14px}
+  .chip{border:3px solid var(--black);border-radius:999px;padding:11px 18px;
+        font-weight:700;font-size:14px;background:var(--mint);color:var(--purple)}
+
+  .quote{border-left:5px solid var(--mint);padding-left:18px;font-size:17px;
+         line-height:1.6;font-weight:600}
+
+  .cta{display:inline-block;margin-top:8px;border:3px solid var(--black);
+       border-radius:14px;padding:15px 22px;background:var(--purple);
+       color:var(--cream);font-family:'Anton',sans-serif;font-size:19px;
+       text-decoration:none}
+  section.alt .cta{background:var(--cream);color:var(--purple)}
+
+  .pagefoot{background:var(--cream);color:var(--purple);
+            border-top:9px solid var(--yellow);padding:34px 20px 40px}
+  .pagefoot .mark{font-family:'Anton',sans-serif;font-size:34px}
+  .pagefoot .mark span{color:var(--pink)}
+  .pagefoot .slogan{font-weight:500;font-size:14px;margin:4px 0 22px}
+  .pagefoot .small{font-size:12.5px;line-height:1.6;opacity:.7;margin-top:20px}
+  .pagefoot a{color:var(--purple)}
+
   footer{margin-top:38px;padding:22px 20px 10px;border-top:5px solid var(--yellow);
          font-size:12.5px;line-height:1.55;opacity:.75}
   .live{display:inline-flex;align-items:center;gap:6px;font-weight:700;
@@ -174,6 +225,122 @@
 <div class="wrap">
   <header><h1>Spendenstand<em>live.</em></h1></header>
   <div id="app" class="loading">Lade aktuellen Stand …</div>
+</div>
+
+<main>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">Worum es geht</div>
+      <h2>Wir kaufen nichts.<em>Wir fragen nur.</em></h2>
+      <p>In den Tagen vor Schulbeginn stehen wir vor Schreibwarenläden in Eppendorf.
+         Wir sprechen Menschen an, die ohnehin gerade Schulsachen kaufen, und fragen
+         sie eine einzige Sache: <strong>Kaufst du ein Teil mehr, als du selbst
+         brauchst?</strong></p>
+      <p>Ein Heft. Ein paar Stifte. Ein Federmäppchen. Mehr nicht. Alles, was in
+         unserer Kiste landet, geht anschließend an Kinder und Jugendliche der
+         Jugendhilfe – also an junge Menschen, die nicht bei ihren Familien
+         aufwachsen konnten und mit deutlich weniger ins Schuljahr starten.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="num" style="background:var(--pink)">1</div>
+          <p>Du kaufst beim eigenen Einkauf ein Teil mehr.</p>
+        </div>
+        <div class="step">
+          <div class="num" style="background:var(--yellow)">2</div>
+          <p>Du legst es bei uns in die Kiste. Das war's schon.</p>
+        </div>
+        <div class="step">
+          <div class="num" style="background:var(--mint)">3</div>
+          <p>Wir bringen alles gebündelt zu den Einrichtungen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="kicker">Wie es entstanden ist</div>
+      <h2>Angefangen hat es<em>mit einer Frage.</em></h2>
+      <p>Jedes Jahr im August füllen sich die Schreibwarenläden. Federmäppchen
+         werden ausgesucht, Hefte gestapelt, Ranzen gepackt. Für viele Familien
+         gehört das zum Sommer dazu.</p>
+      <p>Für andere nicht. Kinder und Jugendliche, die in Wohngruppen leben,
+         starten oft mit dem, was vom letzten Jahr übrig geblieben ist. Und die
+         Einrichtungen, die sie betreuen, haben selten Geld für neue Sachen übrig.</p>
+      <p>Daraus wurde eine einfache Frage: <strong>Was, wenn man die Hilfe genau
+         dorthin bringt, wo die Sachen sowieso schon gekauft werden?</strong>
+         Kein Spendenkonto, kein Formular. Nur ein Heft mehr im Einkaufskorb.</p>
+    </div>
+  </section>
+
+  <section class="alt2">
+    <div class="wrap">
+      <div class="kicker">Wer dahintersteckt</div>
+      <h2>Hi, wir sind<em>youngforyoung.</em></h2>
+      <p>Ich bin Olivia und komme aus Hamburg. Mit der Jugendhilfe hatte ich
+         schon Berührungspunkte, und für mich war <strong>Bildung immer der
+         Schlüssel zur Welt.</strong> Sie entscheidet mit darüber, welche Türen
+         sich im Leben öffnen – und wie viel davon man selbst in der Hand hat.</p>
+      <p>Genau deshalb geht es hier nicht um Kleinigkeiten. Ein volles Mäppchen am
+         ersten Schultag ist ein Anfang. Es heißt: Du gehörst dazu, du kannst
+         mitmachen, du bist nicht die Ausnahme in der Klasse.</p>
+      <p class="quote">Junge Menschen sollten sich untereinander unterstützen.
+         Deshalb heißt das Ganze youngforyoung.</p>
+      <p>Wir sind kein Verein und keine Organisation, sondern eine Handvoll Leute
+         mit einer Kiste und ein paar Tagen Zeit. Was wir sammeln, geht deshalb
+         direkt an anerkannte gemeinnützige Träger, die genau wissen, wo es
+         gebraucht wird.</p>
+    </div>
+  </section>
+
+  <section class="alt3">
+    <div class="wrap">
+      <div class="kicker">Wer es bekommt</div>
+      <h2>Dorthin, wo<em>am wenigsten da ist.</em></h2>
+      <p>Wir arbeiten mit erfahrenen Hamburger Trägern der Kinder- und Jugendhilfe
+         zusammen. Sie entscheiden, in welche Wohngruppe das Material geht –
+         besser als jede Liste von außen wissen sie, wo der Bedarf gerade am
+         größten ist.</p>
+      <div class="partners">
+        <span class="chip">Hamburger Kinder- und Jugendhilfe e.&nbsp;V.</span>
+        <span class="chip">Das Rauhe Haus</span>
+      </div>
+      <p style="margin-top:22px"><strong>Ein Wort zum Schutz der Kinder:</strong>
+         Wir nennen nach außen bewusst keine einzelnen Einrichtungen und schon gar
+         keine Namen. Niemand soll öffentlich als bedürftig dastehen, nur weil er
+         ein Heft bekommt.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">Mitmachen</div>
+      <h2>Komm vorbei<em>oder sag es weiter.</em></h2>
+      <p>Du findest uns am <strong>Eppendorfer Baum, Ecke Hegestraße</strong>.
+         Wenn du gerade keine Zeit oder kein Geld übrig hast: Die Aktion weiterzu&shy;erzählen
+         hilft uns fast genauso viel.</p>
+      <p>Du hast Fragen, willst mithelfen oder etwas Größeres spenden?
+         Schreib mir einfach.</p>
+      <a class="cta" href="mailto:oliviajools@icloud.com">Schreib uns eine Mail</a>
+    </div>
+  </section>
+
+</main>
+
+<div class="pagefoot">
+  <div class="wrap">
+    <div class="mark">young<span>for</span>young</div>
+    <div class="slogan">Weil niemand allein groß wird.</div>
+    <div><strong>Sammelaktion Nº 1</strong><br>
+         17. bis 19. August · Eppendorfer Baum, Ecke Hegestraße, Hamburg</div>
+    <div class="small">
+      Eine ehrenamtliche, private Initiative ohne Gewinnabsicht.
+      Gesammelt wird ausschließlich Sachmaterial, kein Geld.<br>
+      Kontakt: <a href="mailto:oliviajools@icloud.com">oliviajools@icloud.com</a>
+    </div>
+  </div>
 </div>
 
 <button class="fab" id="fab" title="Verwaltung">🔒</button>
@@ -334,11 +501,10 @@ function render(){
       }).join('')}
     </div>
 
-    <footer>
+    <div class="meta">
       ${liveOK?'<span class="live"><i></i>Live</span><br>':''}
-      Alles geht an die Hamburger Kinder- und Jugendhilfe e.&nbsp;V.<br>
       Zuletzt aktualisiert: ${fmt(updatedAt)}
-    </footer>`;
+    </div>`;
 
   requestAnimationFrame(()=>{
     document.querySelectorAll('.hbar').forEach(b=>b.style.width = b.dataset.w+'%');
