@@ -169,6 +169,30 @@
   .shot.wide img{max-height:74vh}
   @media(min-width:560px){ .gallery{grid-template-columns:1fr 1fr} }
 
+  /* ---- Standort ---- */
+  .here{margin:18px 20px 0;background:var(--yellow);color:var(--purple);
+        border:4px solid var(--black);border-radius:20px;padding:15px 17px;
+        display:flex;align-items:center;gap:13px}
+  .here .pin{flex:none;font-size:26px;line-height:1}
+  .here .txt{flex:1;min-width:0}
+  .here .lbl{font-weight:700;font-size:10.5px;letter-spacing:.17em;
+             text-transform:uppercase;opacity:.72}
+  .here .adr{font-family:'Anton',sans-serif;font-size:20px;line-height:1.12;margin-top:2px}
+  .here .tme{font-weight:600;font-size:12.5px;margin-top:3px}
+  .here a{flex:none;background:var(--purple);color:var(--cream);
+          border:3px solid var(--black);border-radius:12px;
+          padding:11px 13px;font-family:'Anton',sans-serif;font-size:14px;
+          text-decoration:none;white-space:nowrap}
+
+  .mapbox{margin-top:22px;border:4px solid var(--black);border-radius:18px;
+          overflow:hidden;background:#e8e2f5;line-height:0}
+  .mapbox iframe{display:block;width:100%;height:340px;border:0}
+  .mapnote{font-size:12.5px;opacity:.75;margin-top:9px;line-height:1.5}
+  .maplinks{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .maplinks a{border:3px solid var(--black);border-radius:13px;padding:13px 17px;
+              font-family:'Anton',sans-serif;font-size:16px;text-decoration:none;
+              background:var(--mint);color:var(--purple)}
+
   .videobox{margin-top:22px;border:4px solid var(--black);border-radius:18px;
             overflow:hidden;background:#1a0f3d;line-height:0}
   .videobox video{display:block;width:100%;max-height:74vh;background:#1a0f3d}
@@ -254,6 +278,17 @@
 
 <div class="wrap">
   <header><h1>Spendenstand<em>live.</em></h1></header>
+  <div class="here">
+    <div class="pin">📍</div>
+    <div class="txt">
+      <div class="lbl">Hier stehen wir</div>
+      <div class="adr">Eppendorfer Baum,<br>Ecke Hegestraße</div>
+      <div class="tme">17. bis 19. August · Hamburg-Eppendorf</div>
+    </div>
+    <a href="https://www.google.com/maps/dir/?api=1&amp;destination=53.58395,9.98330"
+       target="_blank" rel="noopener">Route</a>
+  </div>
+
   <div id="app" class="loading">Lade aktuellen Stand …</div>
 </div>
 
@@ -395,8 +430,24 @@
       <p>Du findest uns am <strong>Eppendorfer Baum, Ecke Hegestraße</strong>.
          Wenn du gerade keine Zeit oder kein Geld übrig hast: Die Aktion weiterzu&shy;erzählen
          hilft uns fast genauso viel.</p>
-      <p>Du hast Fragen, willst mithelfen oder etwas Größeres spenden?
-         Schreib mir einfach.</p>
+      <div class="mapbox">
+        <iframe
+          src="https://www.openstreetmap.org/export/embed.html?bbox=9.9793%2C53.5822%2C9.9873%2C53.5857&amp;layer=mapnik&amp;marker=53.58395%2C9.98330"
+          title="Karte: Eppendorfer Baum, Ecke Hegestraße, Hamburg"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="mapnote">Der Punkt zeigt die Kreuzung Eppendorfer Baum / Hegestraße.
+        Wir stehen dort am Straßenrand – du erkennst uns an der Kiste und den Schildern.</div>
+
+      <div class="maplinks">
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=53.58395,9.98330"
+           target="_blank" rel="noopener">In Google Maps öffnen</a>
+        <a href="https://maps.apple.com/?daddr=53.58395,9.98330&amp;dirflg=w"
+           target="_blank" rel="noopener">In Apple Karten öffnen</a>
+      </div>
+
+      <p style="margin-top:26px">Du hast Fragen, willst mithelfen oder etwas Größeres
+         spenden? Schreib mir einfach.</p>
       <a class="cta" href="mailto:oliviajools@icloud.com">Schreib uns eine Mail</a>
     </div>
   </section>
@@ -410,7 +461,8 @@
     <div><strong>Sammelaktion Nº 1</strong><br>
          17. bis 19. August · Eppendorfer Baum, Ecke Hegestraße, Hamburg</div>
     <div class="small">
-      Eine ehrenamtliche, private Initiative ohne Gewinnabsicht.<br>
+      Eine ehrenamtliche, private Initiative ohne Gewinnabsicht.
+      Gesammelt wird ausschließlich Sachmaterial, kein Geld.<br>
       Kontakt: <a href="mailto:oliviajools@icloud.com">oliviajools@icloud.com</a>
     </div>
   </div>
